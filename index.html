@@ -285,7 +285,7 @@
 
     <script>
         /* =========================================
-           ASSETS CONFIGURATION (UPDATED FILE NAMES)
+           ASSETS CONFIGURATION
            ========================================= */
         const ASSETS = {
             yandere: {
@@ -444,6 +444,7 @@
 
             gameState = 'AIMING';
             
+            // Play Start sound (User interaction handled by clicking "Start Game" button previously)
             triggerReaction('start');
             
             requestAnimationFrame(gameLoop);
@@ -495,7 +496,7 @@
                 audioType = 'action';
             } 
             else if (type === 'bad') { // Low Hits
-                imgSrc = char.expressions.poor; // USES THE POOR/WEAK IMAGE
+                imgSrc = char.expressions.poor; 
                 text = char.lines.poor[Math.floor(Math.random()*char.lines.poor.length)];
                 animClass = 'anim-shake';
                 audioType = 'poor';
@@ -528,12 +529,21 @@
             }
         }
 
+        // UPDATED AUDIO FUNCTION
         function playVoice(type) {
-            const filename = `assets/audio/voices/${selectedCharKey}_${type}.mp3`;
+            // FIXED: Now we get the character name ("Hana") and lowercase it ("hana")
+            // This matches your filenames: hana_start.mp3, akari_win.mp3, etc.
+            const charName = ASSETS[selectedCharKey].name.toLowerCase();
+            const filename = `assets/audio/voices/${charName}_${type}.mp3`;
+            
+            console.log("Playing audio:", filename); // Check console if it still fails
+
             try {
                 audioPlayer.src = filename;
                 audioPlayer.volume = 0.8;
-                audioPlayer.play().catch(e => {});
+                audioPlayer.play().catch(e => {
+                    console.log("Audio failed. Browser might need interaction first or file not found.");
+                });
             } catch(e) {}
         }
 
